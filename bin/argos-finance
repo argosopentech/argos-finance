@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Run from top level directory of the argos-finance repo
+go run *.go
