@@ -23,6 +23,7 @@ class StockPriceGraphApp(QWidget):
         # Stock symbol input
         self.symbol_label = QLabel('Enter Stock Symbol:')
         self.symbol_input = QLineEdit()
+        self.symbol_input.setText('SPY')
         layout.addWidget(self.symbol_label)
         layout.addWidget(self.symbol_input)
 
@@ -84,5 +85,6 @@ class StockPriceGraphApp(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = StockPriceGraphApp()
+    window.plot_stock_price()
     window.show()
     sys.exit(app.exec_())
