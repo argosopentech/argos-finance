@@ -29,11 +29,11 @@ class StockPriceGraphApp(QWidget):
         # Date range selection
         self.date_range_label = QLabel('Select Date Range:')
         self.date_range_combo = QComboBox()
+        self.date_range_combo.addItem('All')
         self.date_range_combo.addItem('5 years')
         self.date_range_combo.addItem('3 years')
         self.date_range_combo.addItem('1 year')
         self.date_range_combo.addItem('YTD')
-        self.date_range_combo.addItem('All')
         layout.addWidget(self.date_range_label)
         layout.addWidget(self.date_range_combo)
 
