@@ -1,10 +1,12 @@
 import sys
 import yfinance as yf
 import matplotlib.pyplot as plt
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QDateEdit
+from PyQt5.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QDateEdit, QComboBox
+)
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class StockPriceGraphApp(QWidget):
     def __init__(self):
@@ -25,17 +27,15 @@ class StockPriceGraphApp(QWidget):
         layout.addWidget(self.symbol_input)
 
         # Date range selection
-        self.start_date_label = QLabel('Start Date:')
-        self.start_date_picker = QDateEdit()
-        self.start_date_picker.setDate(datetime(2021, 1, 1).date())
-        layout.addWidget(self.start_date_label)
-        layout.addWidget(self.start_date_picker)
-
-        self.end_date_label = QLabel('End Date:')
-        self.end_date_picker = QDateEdit()
-        self.end_date_picker.setDate(datetime.today().date())
-        layout.addWidget(self.end_date_label)
-        layout.addWidget(self.end_date_picker)
+        self.date_range_label = QLabel('Select Date Range:')
+        self.date_range_combo = QComboBox()
+        self.date_range_combo.addItem('5 years')
+        self.date_range_combo.addItem('3 years')
+        self.date_range_combo.addItem('1 year')
+        self.date_range_combo.addItem('YTD')
+        self.date_range_combo.addItem('All')
+        layout.addWidget(self.date_range_label)
+        layout.addWidget(self.date_range_combo)
 
         # Fetch and display button
         self.fetch_button = QPushButton('Fetch and Display')
@@ -52,8 +52,20 @@ class StockPriceGraphApp(QWidget):
 
     def plot_stock_price(self):
         symbol = self.symbol_input.text()
-        start_date = self.start_date_picker.date().toPyDate()
-        end_date = self.end_date_picker.date().toPyDate()
+        selected_range = self.date_range_combo.currentText()
+        
+        end_date = datetime.today().date()
+        
+        if selected_range == '5 years':
+            start_date = end_date - timedelta(days=365 * 5)
+        elif selected_range == '3 years':
+            start_date = end_date - timedelta(days=365 * 3)
+        elif selected_range == '1 year':
+            start_date = end_date - timedelta(days=365)
+        elif selected_range == 'YTD':
+            start_date = datetime(end_date.year, 1, 1).date()
+        else:  # 'All'
+            start_date = datetime(1970, 1, 1).date()
 
         if symbol:
             df = yf.download(symbol, start=start_date, end=end_date)
